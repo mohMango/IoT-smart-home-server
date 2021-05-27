@@ -1,31 +1,24 @@
 import express from "express";
-import mysql from "mysql";
 import cors from "cors";
+
+import deviceRoutes from "./src/routes/device.routes.js";
 
 const app = express();
 const port = process.env.PORT || 5000;
 
+// Cross-Origin Resource Sharing (CORS) is a security protocol in modern browsers
 app.use(cors());
+// parse requests of content-type: application/json
+app.use(express.json());
+// parse requests of content-type: application/x-www-form-urlencoded
+app.use(express.urlencoded({ extended: true }));
 
-// const db = mysql.createConnection({
-//   host: "us-cdbr-east-03.cleardb.com",
-//   user: "b3b5677df7ed24",
-//   password: "d8983573",
-//   database: "heroku_bfcd467c89387c7",
-// });
+app.use(deviceRoutes);
 
-// db.connect((err) => {
-//   if (err) {
-//     throw err;
-//   }
-//   console.log("database connected...");
-// });
-
-//TODO move to routes dir
 app.get("/", (req, res) => {
   res.send({ value: "Hello from server" });
 });
 
 app.listen(port, () => {
-  console.log("on server");
+  console.log(`server run on port: ${port}`);
 });
