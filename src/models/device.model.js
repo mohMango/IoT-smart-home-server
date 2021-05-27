@@ -7,6 +7,27 @@ const Device = function (device) {
   this.type = device.type;
 };
 
+Device.create = (newDevice, result) => {
+  sql.getConnection((err, connection) => {
+    if (err) throw err;
+
+    connection.query("INSERT INTO devices SET ?", newDevice, (err, res) => {
+      if (err) {
+        console.log("error: ", err);
+        result(err, null);
+        return;
+      }
+
+      console.log("created device: ", { id: res.insertId, ...newDevice });
+
+      return null, { id: res.insertId, ...newDevice };
+    });
+
+    connection.release();
+    if (err) throw err;
+  });
+};
+
 Device.findById = (deviceId, result) => {
   sql.getConnection((err, connection) => {
     if (err) throw err;
