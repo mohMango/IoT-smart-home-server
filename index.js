@@ -2,6 +2,8 @@ import express from "express";
 import cors from "cors";
 
 import deviceRoutes from "./src/routes/device.routes.js";
+import userRoutes from "./src/routes/user.routes.js";
+import hubRoutes from "./src/routes/hub.routes.js";
 
 const app = express();
 const port = process.env.PORT || 5000;
@@ -14,6 +16,8 @@ app.use(express.json());
 app.use(express.urlencoded({ extended: true }));
 
 app.use(deviceRoutes);
+app.use(userRoutes);
+app.use(hubRoutes);
 
 app.get("/", (req, res) => {
   res.send({ value: "Hello from server" });

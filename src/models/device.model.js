@@ -20,7 +20,7 @@ Device.create = (newDevice, result) => {
 
       console.log("created device: ", { id: res.insertId, ...newDevice });
 
-      return null, { id: res.insertId, ...newDevice };
+      result(null, { id: res.insertId, ...newDevice });
     });
 
     connection.release();
@@ -67,7 +67,7 @@ Device.getAll = (result) => {
       }
 
       console.log("devices: ", res);
-      return result(null, res);
+      result(null, res);
     });
     connection.release();
     if (err) throw err;
