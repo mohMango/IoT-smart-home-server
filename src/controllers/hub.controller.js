@@ -8,6 +8,7 @@ export const create = (req, res) => {
   const hub = new Hub({
     id: req.body.id,
     name: req.body.name,
+    password: req.body.password,
   });
 
   Hub.create(hub, (err, data) => {
@@ -22,7 +23,7 @@ export const create = (req, res) => {
 };
 
 export const findAll = (req, res) => {
-  Hub.getAll((err, data) => {
+  Hub.getAll(req.params.userId, (err, data) => {
     if (err)
       res.status(500).send({
         message: err.message || "Some error eccorred while retrieving hubs.",
@@ -54,7 +55,13 @@ export const update = (req, res) => {
     res.status(400).send({ message: "Content can not by empty" });
   }
 
-  Hub.updateById(req.params.hubId, new Hub(req.body), (err, data) => {
+  const hub = new Hub({
+    id: req.body.id,
+    name: req.body.name,
+    userId: req.params.userId,
+  });
+
+  Hub.updateById(hub, (err, data) => {
     if (err) {
       if (err.kind === "not_found") {
         res.status(400).send({

@@ -1,10 +1,10 @@
 import sql from "./db.js";
 
 const User = function (user) {
-  this.id = user.id;
+  this.username = user.username;
   this.email = user.email;
   this.password = user.password;
-  this.name = user.name;
+  this.createdAt = user.createdAt;
 };
 
 User.create = (newUser, result) => {
@@ -28,24 +28,27 @@ User.create = (newUser, result) => {
   });
 };
 
-User.findById = (userId, result) => {
+User.findBy = (type, value, result) => {
   sql.getConnection((err, connection) => {
     if (err) throw err;
 
-    connection.query(`SELECT * FROM users WHERE id = ${userId}`, (err, res) => {
-      if (err) {
-        console.log("error: ", err);
-        result(err, null);
-        return;
-      }
-      if (res.length) {
-        console.log("found user: ", res[0]);
-        result(null, res[0]);
-        return;
-      }
+    connection.query(
+      `SELECT * FROM users WHERE ${type} = '${value}'`,
+      (err, res) => {
+        if (err) {
+          console.log("error: ", err);
+          result(err, null);
+          return;
+        }
+        if (res.length) {
+          console.log("found user: ", res[0]);
+          result(null, res[0]);
+          return;
+        }
 
-      result({ kind: "not_found" }, null);
-    });
+        result({ kind: "not_found" }, null);
+      }
+    );
 
     connection.release();
     if (err) throw err;
@@ -76,8 +79,8 @@ User.updateById = (id, user, result) => {
     if (err) throw err;
 
     connection.query(
-      "UPDATE users SET name = ?, email = ?, password = ? WHERE id = ?",
-      [user.name, user.email, user.password, user.id],
+      "UPDATE users SET username = ?, email = ?, password = ? WHERE id = ?",
+      [user.username, user.email, user.password, user.id],
       (err, res) => {
         if (err) {
           console.log("error: ", err);
