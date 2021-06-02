@@ -18,13 +18,7 @@ export const signup = (req, res) => {
     if (err) {
       if (err.kind === "not_found") {
         User.create(user, (err, data) => {
-          if (err)
-            res
-              .status(500)
-              .send(
-                err.message ||
-                  "Some error occurred while creating the Customer."
-              );
+          if (err) res.status(500).send(err.message);
           else {
             const token = jwt.sign(
               { email: user.email, username: user.username },

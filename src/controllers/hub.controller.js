@@ -11,14 +11,21 @@ export const create = (req, res) => {
     password: req.body.password,
   });
 
-  Hub.create(hub, (err, data) => {
-    if (err)
-      res
-        .status(500)
-        .send(
-          err.message || "Some error occurred while creating the Customer."
-        );
-    else res.send(data);
+  Hub.findById(hub.id, (err, data) => {
+    if (err) {
+      if (err.kind === "not_found") {
+        Hub.create(hub, (err, data) => {
+          if (err) res.status(500).send(err.message);
+          else res.send(data);
+        });
+      } else {
+        res.status(500).send({
+          message: "Error retrieving hub with id" + req.params.hubId,
+        });
+      }
+    } else {
+      res.send({ message: "found" });
+    }
   });
 };
 
