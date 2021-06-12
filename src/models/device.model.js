@@ -30,7 +30,34 @@ Device.create = (newDevice, result) => {
   });
 };
 
-Device.findById = (userId, deviceId, result) => {
+Device.findById = (deviceId, result) => {
+  sql.getConnection((err, connection) => {
+    if (err) throw err;
+
+    connection.query(
+      `SELECT * FROM devices WHERE id = ${deviceId}`,
+      (err, res) => {
+        if (err) {
+          console.log("error: ", err);
+          result(err, null);
+          return;
+        }
+        if (res.length) {
+          console.log("found device: ", res[0]);
+          result(null, res[0]);
+          return;
+        }
+
+        result({ kind: "not_found" }, null);
+      }
+    );
+
+    connection.release();
+    if (err) throw err;
+  });
+};
+
+Device.findByUserId = (userId, deviceId, result) => {
   sql.getConnection((err, connection) => {
     if (err) throw err;
 

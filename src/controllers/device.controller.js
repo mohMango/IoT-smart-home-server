@@ -14,9 +14,21 @@ export const create = (req, res) => {
     hubId: req.params.hubId,
   });
 
-  Device.create(device, (err, data) => {
-    if (err) res.status(500).send(err.message);
-    else res.send(data);
+  Device.findById(device.id, (err, data) => {
+    if (err) {
+      if (err.kind === "not_found") {
+        Device.create(device, (err, data) => {
+          if (err) res.status(500).send(err.message);
+          else res.send(data);
+        });
+      } else {
+        res.status(500).send({
+          message: "Error retrieving device with id" + device.id,
+        });
+      }
+    } else {
+      res.send({ message: "found" });
+    }
   });
 };
 
@@ -30,8 +42,26 @@ export const findAll = (req, res) => {
   });
 };
 
+export const findOne_ = (req, res) => {
+  Device.findById(req.params.deviceId, (err, data) => {
+    if (err) {
+      if (err.kind === "not_found") {
+        res.status(400).send({
+          message: `Not found Device with id ${req.params.deviceId}.`,
+        });
+      } else {
+        res.status(500).send({
+          message: "Error retrieving device with id" + req.params.deviceId,
+        });
+      }
+    } else {
+      res.send(data);
+    }
+  });
+};
+
 export const findOne = (req, res) => {
-  Device.findById(req.params.userId, req.params.deviceId, (err, data) => {
+  Device.findByUserId(req.params.userId, req.params.deviceId, (err, data) => {
     if (err) {
       if (err.kind === "not_found") {
         res.status(400).send({
