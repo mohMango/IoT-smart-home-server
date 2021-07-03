@@ -68,7 +68,7 @@ export const update = (req, res) => {
     userId: req.params.userId,
   });
 
-  Hub.updateById(hub, (err, data) => {
+  Hub.findById(hub.id, (err, data) => {
     if (err) {
       if (err.kind === "not_found") {
         res.status(400).send({
@@ -80,7 +80,15 @@ export const update = (req, res) => {
         });
       }
     } else {
-      res.send(data);
+      Hub.updateById(hub, (err, data) => {
+        if (err) {
+          res.status(500).send({
+            message: "Error retrieving hub with id" + req.params.hubId,
+          });
+        } else {
+          res.send(data);
+        }
+      });
     }
   });
 };
