@@ -74,7 +74,7 @@ User.findBy = (type, value, result) => {
 //   });
 // };
 
-User.updateById = (user, result) => {
+User.updateById = (id, user, result) => {
   sql.getConnection((err, connection) => {
     if (err) throw err;
 
@@ -93,7 +93,7 @@ User.updateById = (user, result) => {
         }
 
         console.log("updated user: ", { id: id, ...user });
-        result(null, { user });
+        result(null, { id: id, ...user });
       }
     );
     connection.release();
