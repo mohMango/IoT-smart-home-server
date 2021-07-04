@@ -90,7 +90,7 @@ export const update = (req, res) => {
     res.status(400).send({ message: "Content can not by empty" });
   }
 
-  User.updateById(req.params.userId, new User(req.body), (err, data) => {
+  User.updateById(new User(req.body), (err, data) => {
     if (err) {
       if (err.kind === "not_found") {
         res.status(400).send({
