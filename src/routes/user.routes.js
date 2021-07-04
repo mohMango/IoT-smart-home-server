@@ -5,6 +5,7 @@ import { update, delete_, findAll } from "../controllers/hub.controller.js";
 import {
   updateName,
   findAll as deviceFindAll,
+  updateValue,
 } from "../controllers/device.controller.js";
 
 import auth from "../middleware/auth.js";
@@ -25,5 +26,6 @@ router.delete("/api/:userId/hubs/:hubId", auth, delete_);
 // devices routes
 router.get("/api/:userId/devices", auth, deviceFindAll);
 router.put("/api/:userId/devices/:deviceId/update", auth, updateName);
+router.put("/api/:userId/devices/:deviceId/updateswitch", auth, updateValue);
 
 export default router;
